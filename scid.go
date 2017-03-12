@@ -61,7 +61,8 @@ func init() {
 	conn = scidsConn
 
 	go func(ch chan int32) {
-		_ = scidsConn.Serve(osc.Dispatcher{
+		// Arbitrary number of worker routines.
+		_ = scidsConn.Serve(8, osc.Dispatcher{
 			AddrReply: osc.Method(func(m osc.Message) error {
 				if expected, got := 2, len(m.Arguments); expected != got {
 					return errors.Errorf("expected %d arguments, got %d", expected, got)
